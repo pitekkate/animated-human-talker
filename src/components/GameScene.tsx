@@ -1,6 +1,6 @@
 
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { Suspense } from 'react';
 import Character3D from './Character3D';
 
@@ -29,9 +29,6 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
             shadow-mapSize-height={2048}
           />
           <pointLight position={[-5, 5, 5]} intensity={0.5} />
-          
-          {/* Environment */}
-          <Environment preset="sunset" />
           
           {/* Ground */}
           <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
