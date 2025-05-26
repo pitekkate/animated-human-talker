@@ -6,9 +6,10 @@ import Character3D from './Character3D';
 interface GameSceneProps {
   animation: string;
   characterScale: number;
+  characterPosition: [number, number, number];
 }
 
-const GameScene = ({ animation, characterScale }: GameSceneProps) => {
+const GameScene = ({ animation, characterScale, characterPosition }: GameSceneProps) => {
   return (
     <div className="w-full h-full">
       <Canvas
@@ -36,7 +37,11 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
         
         {/* Character wrapped in Suspense */}
         <Suspense fallback={null}>
-          <Character3D animation={animation} scale={characterScale} />
+          <Character3D 
+            animation={animation} 
+            scale={characterScale} 
+            position={characterPosition}
+          />
         </Suspense>
       </Canvas>
     </div>

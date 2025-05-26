@@ -6,9 +6,10 @@ import * as THREE from 'three';
 interface Character3DProps {
   animation: string;
   scale: number;
+  position: [number, number, number];
 }
 
-const Character3D = ({ animation, scale }: Character3DProps) => {
+const Character3D = ({ animation, scale, position }: Character3DProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Mesh>(null);
   const bodyRef = useRef<THREE.Mesh>(null);
@@ -39,7 +40,7 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
         
       case 'happy':
         // Jumping animation
-        groupRef.current.position.y = Math.abs(Math.sin(newTime * 8)) * 0.3;
+        groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5;
           rightArmRef.current.rotation.z = -Math.sin(newTime * 8) * 0.5 - 0.5;
@@ -73,7 +74,7 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
   });
 
   return (
-    <group ref={groupRef} scale={scale} castShadow>
+    <group ref={groupRef} scale={scale} position={position} castShadow>
       {/* Head */}
       <mesh ref={headRef} position={[0, 1.5, 0]} castShadow>
         <sphereGeometry args={[0.4, 32, 32]} />

@@ -1,14 +1,15 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import GameScene from '@/components/GameScene';
 import GameControls from '@/components/GameControls';
+import MovementControls from '@/components/MovementControls';
 import GameUI from '@/components/GameUI';
 import SettingsDialog from '@/components/SettingsDialog';
 import { toast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const [currentAnimation, setCurrentAnimation] = useState<string>('idle');
-  const [characterScale, setCharacterScale] = useState<number>(1);
+  const [characterScale, setCharacterScale] = useState<number>(0.7); // Made smaller
+  const [characterPosition, setCharacterPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [vibrationEnabled, setVibrationEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -22,6 +23,27 @@ const Index = () => {
       return () => clearTimeout(timer);
     }
   }, [currentAnimation]);
+
+  // Movement functions
+  const moveCharacter = useCallback((direction: string) => {
+    const moveDistance = 0.5;
+    setCharacterPosition((prevPos) => {
+      const [x, y, z] = prevPos;
+      switch (direction) {
+        case 'up':
+          return [x, y, Math.max(z - moveDistance, -3)];
+        case 'down':
+          return [x, y, Math.min(z + moveDistance, 3)];
+        case 'left':
+          return [Math.max(x - moveDistance, -3), y, z];
+        case 'right':
+          return [Math.min(x + moveDistance, 3), y, z];
+        default:
+          return prevPos;
+      }
+    });
+    playSound('move');
+  }, []);
 
   const playSound = useCallback((soundType: string) => {
     if (!isMuted) {
@@ -42,6 +64,9 @@ const Index = () => {
           break;
         case 'touch':
           oscillator.frequency.value = 600;
+          break;
+        case 'move':
+          oscillator.frequency.value = 300;
           break;
         default:
           oscillator.frequency.value = 400;
@@ -135,13 +160,25 @@ const Index = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
       {/* Game Scene */}
-      <GameScene animation={currentAnimation} characterScale={characterScale} />
+      <GameScene 
+        animation={currentAnimation} 
+        characterScale={characterScale} 
+        characterPosition={characterPosition}
+      />
       
       {/* UI Overlay */}
       <GameUI
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
         onShowSettings={() => setShowSettings(true)}
+      />
+      
+      {/* Movement Controls */}
+      <MovementControls
+        onMoveUp={() => moveCharacter('up')}
+        onMoveDown={() => moveCharacter('down')}
+        onMoveLeft={() => moveCharacter('left')}
+        onMoveRight={() => moveCharacter('right')}
       />
       
       {/* Game Controls */}
