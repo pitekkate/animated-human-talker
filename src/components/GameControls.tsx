@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Volume2, Heart, Smile, Music, Zap, PersonStanding } from 'lucide-react';
+import { Volume2, Heart, Smile, Music, Zap, PersonStanding, RotateCcw } from 'lucide-react';
 
 interface GameControlsProps {
   onTouchHead: () => void;
@@ -9,6 +9,7 @@ interface GameControlsProps {
   onMakeDance: () => void;
   onSurprise: () => void;
   onMakeWalk: () => void;
+  onResetCharacter: () => void;
   currentAnimation: string;
 }
 
@@ -19,6 +20,7 @@ const GameControls = ({
   onMakeDance,
   onSurprise,
   onMakeWalk,
+  onResetCharacter,
   currentAnimation
 }: GameControlsProps) => {
   return (
@@ -72,6 +74,14 @@ const GameControls = ({
           disabled={currentAnimation !== 'idle'}
         >
           <Volume2 className="w-6 h-6" />
+        </Button>
+        
+        <Button
+          onClick={onResetCharacter}
+          size="lg"
+          className="bg-gray-500 hover:bg-gray-600 text-white rounded-full p-4 shadow-lg transform transition-transform active:scale-95"
+        >
+          <RotateCcw className="w-6 h-6" />
         </Button>
       </div>
       

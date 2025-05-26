@@ -7,20 +7,12 @@ interface GameSceneProps {
   animation: string;
   characterScale: number;
   characterPosition: [number, number, number];
-  leftArmRotation?: number;
-  rightArmRotation?: number;
-  leftLegRotation?: number;
-  rightLegRotation?: number;
 }
 
 const GameScene = ({ 
   animation, 
   characterScale, 
-  characterPosition,
-  leftArmRotation,
-  rightArmRotation,
-  leftLegRotation,
-  rightLegRotation
+  characterPosition
 }: GameSceneProps) => {
   return (
     <div className="w-full h-full">
@@ -52,10 +44,6 @@ const GameScene = ({
             animation={animation} 
             scale={characterScale} 
             position={characterPosition}
-            leftArmRotation={leftArmRotation}
-            rightArmRotation={rightArmRotation}
-            leftLegRotation={leftLegRotation}
-            rightLegRotation={rightLegRotation}
           />
         </Suspense>
       </Canvas>

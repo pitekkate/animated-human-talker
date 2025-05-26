@@ -7,20 +7,12 @@ interface Character3DProps {
   animation: string;
   scale: number;
   position: [number, number, number];
-  leftArmRotation?: number;
-  rightArmRotation?: number;
-  leftLegRotation?: number;
-  rightLegRotation?: number;
 }
 
 const Character3D = ({ 
   animation, 
   scale, 
-  position,
-  leftArmRotation = 0,
-  rightArmRotation = 0,
-  leftLegRotation = 0,
-  rightLegRotation = 0
+  position
 }: Character3DProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Mesh>(null);
@@ -38,20 +30,6 @@ const Character3D = ({
     
     if (!groupRef.current) return;
 
-    // Apply manual rotations to body parts
-    if (leftArmRef.current) {
-      leftArmRef.current.rotation.z = 0.3 + leftArmRotation;
-    }
-    if (rightArmRef.current) {
-      rightArmRef.current.rotation.z = -0.3 + rightArmRotation;
-    }
-    if (leftLegRef.current) {
-      leftLegRef.current.rotation.x = leftLegRotation;
-    }
-    if (rightLegRef.current) {
-      rightLegRef.current.rotation.x = rightLegRotation;
-    }
-
     // Base animations
     switch (animation) {
       case 'idle':
@@ -62,17 +40,30 @@ const Character3D = ({
         if (headRef.current) {
           headRef.current.rotation.y = Math.sin(newTime * 0.5) * 0.1;
         }
+        // Reset arm and leg positions
+        if (leftArmRef.current && rightArmRef.current) {
+          leftArmRef.current.rotation.z = 0.3;
+          rightArmRef.current.rotation.z = -0.3;
+          leftArmRef.current.rotation.x = 0;
+          rightArmRef.current.rotation.x = 0;
+        }
+        if (leftLegRef.current && rightLegRef.current) {
+          leftLegRef.current.rotation.x = 0;
+          rightLegRef.current.rotation.x = 0;
+        }
         break;
 
       case 'walking':
         // Walking animation
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.x = Math.sin(newTime * 6) * 0.5 + leftArmRotation;
-          rightArmRef.current.rotation.x = -Math.sin(newTime * 6) * 0.5 + rightArmRotation;
+          leftArmRef.current.rotation.x = Math.sin(newTime * 6) * 0.5;
+          rightArmRef.current.rotation.x = -Math.sin(newTime * 6) * 0.5;
+          leftArmRef.current.rotation.z = 0.3;
+          rightArmRef.current.rotation.z = -0.3;
         }
         if (leftLegRef.current && rightLegRef.current) {
-          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.8 + leftLegRotation;
-          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.8 + rightLegRotation;
+          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.8;
+          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.8;
         }
         // Body sway
         if (bodyRef.current) {
@@ -88,21 +79,39 @@ const Character3D = ({
         // Jumping animation
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5 + leftArmRotation;
-          rightArmRef.current.rotation.z = -Math.sin(newTime * 8) * 0.5 - 0.5 + rightArmRotation;
+          leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5;
+          rightArmRef.current.rotation.z = -Math.sin(newTime * 8) * 0.5 - 0.5;
+          leftArmRef.current.rotation.x = 0;
+          rightArmRef.current.rotation.x = 0;
         }
         break;
         
       case 'dancing':
-        // Dancing animation
+        // Enhanced dancing animation
         groupRef.current.rotation.y = Math.sin(newTime * 4) * 0.3;
+        groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.2;
+        
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = Math.sin(newTime * 6) * 0.8 + leftArmRotation;
-          rightArmRef.current.rotation.z = -Math.sin(newTime * 6) * 0.8 + rightArmRotation;
+          leftArmRef.current.rotation.z = Math.sin(newTime * 6) * 0.8 + 0.5;
+          rightArmRef.current.rotation.z = -Math.sin(newTime * 6) * 0.8 - 0.5;
+          leftArmRef.current.rotation.x = Math.sin(newTime * 4) * 0.3;
+          rightArmRef.current.rotation.x = -Math.sin(newTime * 4) * 0.3;
         }
+        
         if (leftLegRef.current && rightLegRef.current) {
-          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.3 + leftLegRotation;
-          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.3 + rightLegRotation;
+          leftLegRef.current.rotation.x = Math.sin(newTime * 8) * 0.3;
+          rightLegRef.current.rotation.x = -Math.sin(newTime * 8) * 0.3;
+        }
+        
+        // Head dancing
+        if (headRef.current) {
+          headRef.current.rotation.y = Math.sin(newTime * 5) * 0.2;
+          headRef.current.rotation.z = Math.sin(newTime * 3) * 0.1;
+        }
+        
+        // Body dancing
+        if (bodyRef.current) {
+          bodyRef.current.rotation.z = Math.sin(newTime * 4) * 0.15;
         }
         break;
         
@@ -112,8 +121,10 @@ const Character3D = ({
           headRef.current.scale.setScalar(1 + Math.sin(newTime * 10) * 0.1);
         }
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = 1.2 + leftArmRotation;
-          rightArmRef.current.rotation.z = -1.2 + rightArmRotation;
+          leftArmRef.current.rotation.z = 1.2;
+          rightArmRef.current.rotation.z = -1.2;
+          leftArmRef.current.rotation.x = 0;
+          rightArmRef.current.rotation.x = 0;
         }
         break;
     }
@@ -169,7 +180,7 @@ const Character3D = ({
         <meshPhongMaterial color="#4ecdc4" />
       </mesh>
       
-      {/* Arms with controllable rotation */}
+      {/* Arms */}
       <mesh ref={leftArmRef} position={[-0.6, 0.7, 0]} rotation={[0, 0, 0.3]} castShadow>
         <cylinderGeometry args={[0.1, 0.1, 0.8, 16]} />
         <meshPhongMaterial color="#ffdbac" />
@@ -189,7 +200,7 @@ const Character3D = ({
         <meshPhongMaterial color="#ffdbac" />
       </mesh>
       
-      {/* Legs with controllable rotation */}
+      {/* Legs */}
       <mesh ref={leftLegRef} position={[-0.2, -0.4, 0]} castShadow>
         <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshPhongMaterial color="#45b7d1" />
