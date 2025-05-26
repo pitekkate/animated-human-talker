@@ -1,6 +1,5 @@
 
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 import { Suspense } from 'react';
 import Character3D from './Character3D';
 
@@ -39,14 +38,6 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
         <Suspense fallback={null}>
           <Character3D animation={animation} scale={characterScale} />
         </Suspense>
-        
-        {/* Controls - ensuring it's the last component in Canvas */}
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          enableRotate={false}
-          target={[0, 0, 0]}
-        />
       </Canvas>
     </div>
   );
