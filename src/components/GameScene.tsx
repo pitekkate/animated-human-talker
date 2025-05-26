@@ -18,7 +18,7 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
         gl={{ antialias: true }}
         className="bg-gradient-to-b from-sky-300 to-green-200"
       >
-        {/* Lighting - outside Suspense */}
+        {/* Lighting */}
         <ambientLight intensity={0.6} />
         <directionalLight
           position={[5, 5, 5]}
@@ -29,24 +29,24 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
         />
         <pointLight position={[-5, 5, 5]} intensity={0.5} />
         
-        {/* Ground - outside Suspense */}
+        {/* Ground */}
         <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[10, 10]} />
           <meshPhongMaterial color="#90EE90" />
         </mesh>
         
-        {/* Controls - outside Suspense */}
+        {/* Character wrapped in Suspense */}
+        <Suspense fallback={null}>
+          <Character3D animation={animation} scale={characterScale} />
+        </Suspense>
+        
+        {/* Controls must be inside Canvas and after other components */}
         <OrbitControls
           enableZoom={false}
           enablePan={false}
           enableRotate={false}
           target={[0, 0, 0]}
         />
-        
-        {/* Only wrap the Character in Suspense */}
-        <Suspense fallback={null}>
-          <Character3D animation={animation} scale={characterScale} />
-        </Suspense>
       </Canvas>
     </div>
   );
