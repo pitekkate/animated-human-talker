@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Volume2, Heart, Smile, Music, Zap, PersonStanding, RotateCcw } from 'lucide-react';
+import { Volume2, Heart, Smile, Music, Zap, PersonStanding, RotateCcw, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Users } from 'lucide-react';
 
 interface GameControlsProps {
   onTouchHead: () => void;
@@ -10,7 +10,13 @@ interface GameControlsProps {
   onSurprise: () => void;
   onMakeWalk: () => void;
   onResetCharacter: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onMoveLeft: () => void;
+  onMoveRight: () => void;
+  onToggleCharacter: () => void;
   currentAnimation: string;
+  selectedCharacter: 'male' | 'female';
 }
 
 const GameControls = ({
@@ -21,10 +27,70 @@ const GameControls = ({
   onSurprise,
   onMakeWalk,
   onResetCharacter,
-  currentAnimation
+  onMoveUp,
+  onMoveDown,
+  onMoveLeft,
+  onMoveRight,
+  onToggleCharacter,
+  currentAnimation,
+  selectedCharacter
 }: GameControlsProps) => {
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-purple-600/90 to-transparent p-4">
+      {/* Character Selection */}
+      <div className="flex justify-center mb-3">
+        <Button
+          onClick={onToggleCharacter}
+          size="lg"
+          className={`${selectedCharacter === 'male' ? 'bg-blue-600' : 'bg-pink-600'} hover:bg-opacity-80 text-white rounded-full p-3 shadow-lg transform transition-transform active:scale-95`}
+        >
+          <Users className="w-5 h-5 mr-2" />
+          {selectedCharacter === 'male' ? 'Cowok' : 'Cewek'}
+        </Button>
+      </div>
+      
+      {/* Movement Controls */}
+      <div className="flex justify-center mb-3">
+        <div className="grid grid-cols-3 gap-2">
+          <div></div>
+          <Button
+            onClick={onMoveUp}
+            size="sm"
+            className="bg-gray-600 hover:bg-gray-700 text-white rounded p-2 shadow-lg transform transition-transform active:scale-95"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </Button>
+          <div></div>
+          
+          <Button
+            onClick={onMoveLeft}
+            size="sm"
+            className="bg-gray-600 hover:bg-gray-700 text-white rounded p-2 shadow-lg transform transition-transform active:scale-95"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div></div>
+          <Button
+            onClick={onMoveRight}
+            size="sm"
+            className="bg-gray-600 hover:bg-gray-700 text-white rounded p-2 shadow-lg transform transition-transform active:scale-95"
+          >
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+          
+          <div></div>
+          <Button
+            onClick={onMoveDown}
+            size="sm"
+            className="bg-gray-600 hover:bg-gray-700 text-white rounded p-2 shadow-lg transform transition-transform active:scale-95"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </Button>
+          <div></div>
+        </div>
+      </div>
+      
+      {/* Action Controls */}
       <div className="flex justify-center space-x-3 mb-4">
         <Button
           onClick={onTouchHead}
@@ -87,11 +153,11 @@ const GameControls = ({
       
       <div className="text-center">
         <p className="text-white text-sm font-medium">
-          {currentAnimation === 'idle' && "Tap the buttons to interact!"}
-          {currentAnimation === 'happy' && "Your friend is happy! 😊"}
-          {currentAnimation === 'walking' && "Walking around! 🚶‍♂️"}
-          {currentAnimation === 'dancing' && "Dancing time! 💃"}
-          {currentAnimation === 'surprised' && "Wow! That was surprising! 😲"}
+          {currentAnimation === 'idle' && `Kontrol karakter ${selectedCharacter === 'male' ? 'cowok' : 'cewek'}! Gunakan panah untuk menggeser.`}
+          {currentAnimation === 'happy' && `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} senang! 😊`}
+          {currentAnimation === 'walking' && `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} sedang jalan! 🚶‍♂️`}
+          {currentAnimation === 'dancing' && `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} sedang menari! 💃`}
+          {currentAnimation === 'surprised' && `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} kaget! 😲`}
         </p>
       </div>
     </div>

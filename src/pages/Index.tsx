@@ -8,43 +8,77 @@ import SettingsDialog from '@/components/SettingsDialog';
 import { toast } from '@/hooks/use-toast';
 
 const Index = () => {
-  const [currentAnimation, setCurrentAnimation] = useState<string>('idle');
+  const [maleAnimation, setMaleAnimation] = useState<string>('idle');
+  const [femaleAnimation, setFemaleAnimation] = useState<string>('idle');
   const [characterScale, setCharacterScale] = useState<number>(0.5);
-  const [characterPosition, setCharacterPosition] = useState<[number, number, number]>([0, 0, 0]);
+  const [malePosition, setMalePosition] = useState<[number, number, number]>([-1.5, 0, 0]);
+  const [femalePosition, setFemalePosition] = useState<[number, number, number]>([1.5, 0, 0]);
+  const [selectedCharacter, setSelectedCharacter] = useState<'male' | 'female'>('male');
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [vibrationEnabled, setVibrationEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
+  const currentAnimation = selectedCharacter === 'male' ? maleAnimation : femaleAnimation;
+  const currentPosition = selectedCharacter === 'male' ? malePosition : femalePosition;
+
   // Auto-reset animation to idle after some time
   useEffect(() => {
-    if (currentAnimation !== 'idle') {
+    if (maleAnimation !== 'idle') {
       const timer = setTimeout(() => {
-        setCurrentAnimation('idle');
+        setMaleAnimation('idle');
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [currentAnimation]);
+  }, [maleAnimation]);
+
+  useEffect(() => {
+    if (femaleAnimation !== 'idle') {
+      const timer = setTimeout(() => {
+        setFemaleAnimation('idle');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [femaleAnimation]);
 
   // Movement functions
   const moveCharacter = useCallback((direction: string) => {
     const moveDistance = 0.5;
-    setCharacterPosition((prevPos) => {
-      const [x, y, z] = prevPos;
-      switch (direction) {
-        case 'up':
-          return [x, y, Math.max(z - moveDistance, -3)];
-        case 'down':
-          return [x, y, Math.min(z + moveDistance, 3)];
-        case 'left':
-          return [Math.max(x - moveDistance, -3), y, z];
-        case 'right':
-          return [Math.min(x + moveDistance, 3), y, z];
-        default:
-          return prevPos;
-      }
-    });
+    
+    if (selectedCharacter === 'male') {
+      setMalePosition((prevPos) => {
+        const [x, y, z] = prevPos;
+        switch (direction) {
+          case 'up':
+            return [x, y, Math.max(z - moveDistance, -4)];
+          case 'down':
+            return [x, y, Math.min(z + moveDistance, 4)];
+          case 'left':
+            return [Math.max(x - moveDistance, -4), y, z];
+          case 'right':
+            return [Math.min(x + moveDistance, 4), y, z];
+          default:
+            return prevPos;
+        }
+      });
+    } else {
+      setFemalePosition((prevPos) => {
+        const [x, y, z] = prevPos;
+        switch (direction) {
+          case 'up':
+            return [x, y, Math.max(z - moveDistance, -4)];
+          case 'down':
+            return [x, y, Math.min(z + moveDistance, 4)];
+          case 'left':
+            return [Math.max(x - moveDistance, -4), y, z];
+          case 'right':
+            return [Math.min(x + moveDistance, 4), y, z];
+          default:
+            return prevPos;
+        }
+      });
+    }
     playSound('move');
-  }, []);
+  }, [selectedCharacter]);
 
   const playSound = useCallback((soundType: string) => {
     if (!isMuted) {
@@ -90,88 +124,110 @@ const Index = () => {
     }
   }, [vibrationEnabled]);
 
-  const handleResetCharacter = useCallback(() => {
-    setCharacterPosition([0, 0, 0]);
-    setCurrentAnimation('idle');
-    playSound('touch');
+  const setCurrentAnimation = useCallback((animation: string) => {
+    if (selectedCharacter === 'male') {
+      setMaleAnimation(animation);
+    } else {
+      setFemaleAnimation(animation);
+    }
+  }, [selectedCharacter]);
+
+  const handleToggleCharacter = useCallback(() => {
+    setSelectedCharacter(prev => prev === 'male' ? 'female' : 'male');
     toast({
-      title: "Character Reset! 🔄",
-      description: "Character returned to starting position",
+      title: selectedCharacter === 'male' ? "Karakter Cewek! 👩" : "Karakter Cowok! 👨",
+      description: selectedCharacter === 'male' ? "Sekarang mengontrol karakter cewek" : "Sekarang mengontrol karakter cowok",
       duration: 2000,
     });
-  }, [playSound]);
+  }, [selectedCharacter]);
+
+  const handleResetCharacter = useCallback(() => {
+    if (selectedCharacter === 'male') {
+      setMalePosition([-1.5, 0, 0]);
+      setMaleAnimation('idle');
+    } else {
+      setFemalePosition([1.5, 0, 0]);
+      setFemaleAnimation('idle');
+    }
+    playSound('touch');
+    toast({
+      title: "Karakter Di-reset! 🔄",
+      description: `Karakter ${selectedCharacter === 'male' ? 'cowok' : 'cewek'} kembali ke posisi awal`,
+      duration: 2000,
+    });
+  }, [selectedCharacter, playSound]);
 
   const handleTouchHead = useCallback(() => {
     setCurrentAnimation('happy');
     playSound('happy');
     triggerVibration([50]);
     toast({
-      title: "Head pat! 🥰",
-      description: "Your friend loves head pats!",
+      title: "Elus kepala! 🥰",
+      description: `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} suka dielus!`,
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration, selectedCharacter]);
 
   const handleTouchBody = useCallback(() => {
     setCurrentAnimation('surprised');
     playSound('touch');
     triggerVibration([100, 50, 100]);
     toast({
-      title: "Ticklish! 😄",
-      description: "That tickles!",
+      title: "Geli! 😄",
+      description: "Itu geli!",
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration]);
 
   const handleMakeHappy = useCallback(() => {
     setCurrentAnimation('happy');
     playSound('happy');
     triggerVibration([200]);
     toast({
-      title: "So happy! 😊",
-      description: "Your friend is jumping with joy!",
+      title: "Senang! 😊",
+      description: `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} lompat kesenangan!`,
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration, selectedCharacter]);
 
   const handleMakeWalk = useCallback(() => {
     setCurrentAnimation('walking');
     playSound('walk');
     triggerVibration([100, 100]);
     toast({
-      title: "Walking! 🚶‍♂️",
-      description: "Your friend is walking around!",
+      title: "Jalan! 🚶‍♂️",
+      description: `${selectedCharacter === 'male' ? 'Cowok' : 'Cewek'} sedang jalan-jalan!`,
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration, selectedCharacter]);
 
   const handleMakeDance = useCallback(() => {
     setCurrentAnimation('dancing');
     playSound('happy');
     triggerVibration([100, 100, 100]);
     toast({
-      title: "Dance time! 💃",
-      description: "Let's dance together!",
+      title: "Waktu menari! 💃",
+      description: "Ayo menari bersama!",
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration]);
 
   const handleSurprise = useCallback(() => {
     setCurrentAnimation('surprised');
     playSound('surprise');
     triggerVibration([300]);
     toast({
-      title: "Surprise! 😲",
-      description: "That was unexpected!",
+      title: "Kejutan! 😲",
+      description: "Itu tidak terduga!",
       duration: 2000,
     });
-  }, [playSound, triggerVibration]);
+  }, [setCurrentAnimation, playSound, triggerVibration]);
 
   const handleToggleMute = useCallback(() => {
     setIsMuted(!isMuted);
     toast({
-      title: isMuted ? "Sound On 🔊" : "Sound Off 🔇",
-      description: isMuted ? "Audio effects enabled" : "Audio effects disabled",
+      title: isMuted ? "Suara Nyala 🔊" : "Suara Mati 🔇",
+      description: isMuted ? "Efek suara diaktifkan" : "Efek suara dinonaktifkan",
       duration: 1000,
     });
   }, [isMuted]);
@@ -187,9 +243,11 @@ const Index = () => {
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
       {/* Game Scene */}
       <GameScene 
-        animation={currentAnimation} 
+        maleAnimation={maleAnimation}
+        femaleAnimation={femaleAnimation}
         characterScale={characterScale} 
-        characterPosition={characterPosition}
+        malePosition={malePosition}
+        femalePosition={femalePosition}
       />
       
       {/* UI Overlay */}
@@ -216,7 +274,13 @@ const Index = () => {
         onMakeDance={handleMakeDance}
         onSurprise={handleSurprise}
         onResetCharacter={handleResetCharacter}
+        onMoveUp={() => moveCharacter('up')}
+        onMoveDown={() => moveCharacter('down')}
+        onMoveLeft={() => moveCharacter('left')}
+        onMoveRight={() => moveCharacter('right')}
+        onToggleCharacter={handleToggleCharacter}
         currentAnimation={currentAnimation}
+        selectedCharacter={selectedCharacter}
       />
       
       {/* Settings Dialog */}
