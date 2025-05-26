@@ -40,7 +40,7 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
           <Character3D animation={animation} scale={characterScale} />
         </Suspense>
         
-        {/* Controls must be inside Canvas and after other components */}
+        {/* Controls - ensuring it's the last component in Canvas */}
         <OrbitControls
           enableZoom={false}
           enablePan={false}

@@ -73,7 +73,7 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
   });
 
   return (
-    <group ref={groupRef} scale={[scale, scale, scale]} castShadow>
+    <group ref={groupRef} scale={scale} castShadow>
       {/* Head */}
       <mesh ref={headRef} position={[0, 1.5, 0]} castShadow>
         <sphereGeometry args={[0.4, 32, 32]} />
