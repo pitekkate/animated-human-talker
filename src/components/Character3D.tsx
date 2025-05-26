@@ -73,7 +73,7 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
   });
 
   return (
-    <group ref={groupRef} scale={scale}>
+    <group ref={groupRef} scale={[scale, scale, scale]}>
       {/* Head */}
       <Sphere ref={headRef} position={[0, 1.5, 0]} args={[0.4, 32, 32]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
