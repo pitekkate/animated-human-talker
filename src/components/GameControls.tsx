@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Volume2, Heart, Smile, Music, Zap } from 'lucide-react';
+import { Volume2, Heart, Smile, Music, Zap, PersonStanding } from 'lucide-react';
 
 interface GameControlsProps {
   onTouchHead: () => void;
@@ -8,6 +8,7 @@ interface GameControlsProps {
   onMakeHappy: () => void;
   onMakeDance: () => void;
   onSurprise: () => void;
+  onMakeWalk: () => void;
   currentAnimation: string;
 }
 
@@ -17,6 +18,7 @@ const GameControls = ({
   onMakeHappy,
   onMakeDance,
   onSurprise,
+  onMakeWalk,
   currentAnimation
 }: GameControlsProps) => {
   return (
@@ -37,6 +39,14 @@ const GameControls = ({
           className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-4 shadow-lg transform transition-transform active:scale-95"
         >
           <Smile className="w-6 h-6" />
+        </Button>
+        
+        <Button
+          onClick={onMakeWalk}
+          size="lg"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-4 shadow-lg transform transition-transform active:scale-95"
+        >
+          <PersonStanding className="w-6 h-6" />
         </Button>
         
         <Button
@@ -69,6 +79,7 @@ const GameControls = ({
         <p className="text-white text-sm font-medium">
           {currentAnimation === 'idle' && "Tap the buttons to interact!"}
           {currentAnimation === 'happy' && "Your friend is happy! 😊"}
+          {currentAnimation === 'walking' && "Walking around! 🚶‍♂️"}
           {currentAnimation === 'dancing' && "Dancing time! 💃"}
           {currentAnimation === 'surprised' && "Wow! That was surprising! 😲"}
         </p>

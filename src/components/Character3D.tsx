@@ -63,6 +63,26 @@ const Character3D = ({
           headRef.current.rotation.y = Math.sin(newTime * 0.5) * 0.1;
         }
         break;
+
+      case 'walking':
+        // Walking animation
+        if (leftArmRef.current && rightArmRef.current) {
+          leftArmRef.current.rotation.x = Math.sin(newTime * 6) * 0.5 + leftArmRotation;
+          rightArmRef.current.rotation.x = -Math.sin(newTime * 6) * 0.5 + rightArmRotation;
+        }
+        if (leftLegRef.current && rightLegRef.current) {
+          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.8 + leftLegRotation;
+          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.8 + rightLegRotation;
+        }
+        // Body sway
+        if (bodyRef.current) {
+          bodyRef.current.rotation.z = Math.sin(newTime * 6) * 0.1;
+        }
+        // Head movement
+        if (headRef.current) {
+          headRef.current.rotation.y = Math.sin(newTime * 3) * 0.15;
+        }
+        break;
         
       case 'happy':
         // Jumping animation
@@ -107,6 +127,7 @@ const Character3D = ({
         <meshPhongMaterial color="#ffdbac" />
       </mesh>
       
+      {/* Eyes */}
       <mesh position={[-0.15, 1.6, 0.35]} castShadow>
         <sphereGeometry args={[0.08, 16, 16]} />
         <meshPhongMaterial color="white" />
@@ -124,16 +145,19 @@ const Character3D = ({
         <meshPhongMaterial color="black" />
       </mesh>
       
+      {/* Nose */}
       <mesh position={[0, 1.5, 0.35]} castShadow>
         <sphereGeometry args={[0.03, 16, 16]} />
         <meshPhongMaterial color="#ffbf80" />
       </mesh>
       
+      {/* Mouth */}
       <mesh position={[0, 1.35, 0.35]} castShadow>
         <sphereGeometry args={[0.1, 16, 16]} />
         <meshPhongMaterial color="#ff6b6b" />
       </mesh>
       
+      {/* Hair */}
       <mesh position={[0, 1.8, 0]} castShadow>
         <sphereGeometry args={[0.45, 32, 32]} />
         <meshPhongMaterial color="#8b4513" />

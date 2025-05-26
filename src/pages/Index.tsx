@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import GameScene from '@/components/GameScene';
 import GameControls from '@/components/GameControls';
@@ -5,17 +6,17 @@ import MovementControls from '@/components/MovementControls';
 import BodyPartControls from '@/components/BodyPartControls';
 import GameUI from '@/components/GameUI';
 import SettingsDialog from '@/components/SettingsDialog';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [currentAnimation, setCurrentAnimation] = useState<string>('idle');
-  const [characterScale, setCharacterScale] = useState<number>(0.7);
+  const [characterScale, setCharacterScale] = useState<number>(0.5);
   const [characterPosition, setCharacterPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [vibrationEnabled, setVibrationEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   
-  // Body part rotations
+  // Body part rotations - reset to 0
   const [leftArmRotation, setLeftArmRotation] = useState<number>(0);
   const [rightArmRotation, setRightArmRotation] = useState<number>(0);
   const [leftLegRotation, setLeftLegRotation] = useState<number>(0);
@@ -75,6 +76,9 @@ const Index = () => {
         case 'move':
           oscillator.frequency.value = 300;
           break;
+        case 'walk':
+          oscillator.frequency.value = 400;
+          break;
         default:
           oscillator.frequency.value = 400;
       }
@@ -119,10 +123,12 @@ const Index = () => {
     setRightArmRotation(0);
     setLeftLegRotation(0);
     setRightLegRotation(0);
+    setCharacterPosition([0, 0, 0]);
+    setCurrentAnimation('idle');
     playSound('touch');
     toast({
-      title: "Pose Reset! 🔄",
-      description: "Character returned to default pose",
+      title: "Character Reset! 🔄",
+      description: "Character returned to starting position and pose",
       duration: 2000,
     });
   }, [playSound]);
@@ -156,6 +162,17 @@ const Index = () => {
     toast({
       title: "So happy! 😊",
       description: "Your friend is jumping with joy!",
+      duration: 2000,
+    });
+  }, [playSound, triggerVibration]);
+
+  const handleMakeWalk = useCallback(() => {
+    setCurrentAnimation('walking');
+    playSound('walk');
+    triggerVibration([100, 100]);
+    toast({
+      title: "Walking! 🚶‍♂️",
+      description: "Your friend is walking around!",
       duration: 2000,
     });
   }, [playSound, triggerVibration]);
@@ -240,6 +257,7 @@ const Index = () => {
         onTouchHead={handleTouchHead}
         onTouchBody={handleTouchBody}
         onMakeHappy={handleMakeHappy}
+        onMakeWalk={handleMakeWalk}
         onMakeDance={handleMakeDance}
         onSurprise={handleSurprise}
         currentAnimation={currentAnimation}
