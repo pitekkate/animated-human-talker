@@ -36,7 +36,7 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
           {/* Ground */}
           <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[10, 10]} />
-            <meshPhongMaterial color="#90EE90" />
+            <meshPhongMaterial args={[{ color: "#90EE90" }]} />
           </mesh>
           
           {/* Character */}
