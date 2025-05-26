@@ -1,7 +1,6 @@
 
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Sphere, Box, Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface Character3DProps {
@@ -75,75 +74,92 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
   return (
     <group ref={groupRef} scale={scale}>
       {/* Head */}
-      <Sphere ref={headRef} position={[0, 1.5, 0]} args={[0.4]}>
+      <mesh ref={headRef} position={[0, 1.5, 0]}>
+        <sphereGeometry args={[0.4, 32, 32]} />
         <meshPhongMaterial color="#ffdbac" />
-      </Sphere>
+      </mesh>
       
       {/* Eyes */}
-      <Sphere position={[-0.15, 1.6, 0.35]} args={[0.08]}>
+      <mesh position={[-0.15, 1.6, 0.35]}>
+        <sphereGeometry args={[0.08, 16, 16]} />
         <meshPhongMaterial color="white" />
-      </Sphere>
-      <Sphere position={[0.15, 1.6, 0.35]} args={[0.08]}>
+      </mesh>
+      <mesh position={[0.15, 1.6, 0.35]}>
+        <sphereGeometry args={[0.08, 16, 16]} />
         <meshPhongMaterial color="white" />
-      </Sphere>
-      <Sphere position={[-0.15, 1.6, 0.4]} args={[0.04]}>
+      </mesh>
+      <mesh position={[-0.15, 1.6, 0.4]}>
+        <sphereGeometry args={[0.04, 16, 16]} />
         <meshPhongMaterial color="black" />
-      </Sphere>
-      <Sphere position={[0.15, 1.6, 0.4]} args={[0.04]}>
+      </mesh>
+      <mesh position={[0.15, 1.6, 0.4]}>
+        <sphereGeometry args={[0.04, 16, 16]} />
         <meshPhongMaterial color="black" />
-      </Sphere>
+      </mesh>
       
       {/* Nose */}
-      <Sphere position={[0, 1.5, 0.35]} args={[0.03]}>
+      <mesh position={[0, 1.5, 0.35]}>
+        <sphereGeometry args={[0.03, 16, 16]} />
         <meshPhongMaterial color="#ffbf80" />
-      </Sphere>
+      </mesh>
       
       {/* Mouth */}
-      <Sphere position={[0, 1.35, 0.35]} args={[0.1]}>
+      <mesh position={[0, 1.35, 0.35]}>
+        <sphereGeometry args={[0.1, 16, 16]} />
         <meshPhongMaterial color="#ff6b6b" />
-      </Sphere>
+      </mesh>
       
       {/* Hair */}
-      <Sphere position={[0, 1.8, 0]} args={[0.45]}>
+      <mesh position={[0, 1.8, 0]}>
+        <sphereGeometry args={[0.45, 32, 32]} />
         <meshPhongMaterial color="#8b4513" />
-      </Sphere>
+      </mesh>
       
       {/* Body */}
-      <Cylinder ref={bodyRef} position={[0, 0.5, 0]} args={[0.3, 0.4, 1]}>
+      <mesh ref={bodyRef} position={[0, 0.5, 0]}>
+        <cylinderGeometry args={[0.3, 0.4, 1, 32]} />
         <meshPhongMaterial color="#4ecdc4" />
-      </Cylinder>
+      </mesh>
       
       {/* Arms */}
-      <Cylinder ref={leftArmRef} position={[-0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, 0.3]}>
+      <mesh ref={leftArmRef} position={[-0.6, 0.7, 0]} rotation={[0, 0, 0.3]}>
+        <cylinderGeometry args={[0.1, 0.1, 0.8, 16]} />
         <meshPhongMaterial color="#ffdbac" />
-      </Cylinder>
-      <Cylinder ref={rightArmRef} position={[0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, -0.3]}>
+      </mesh>
+      <mesh ref={rightArmRef} position={[0.6, 0.7, 0]} rotation={[0, 0, -0.3]}>
+        <cylinderGeometry args={[0.1, 0.1, 0.8, 16]} />
         <meshPhongMaterial color="#ffdbac" />
-      </Cylinder>
+      </mesh>
       
       {/* Hands */}
-      <Sphere position={[-0.9, 0.4, 0]} args={[0.12]}>
+      <mesh position={[-0.9, 0.4, 0]}>
+        <sphereGeometry args={[0.12, 16, 16]} />
         <meshPhongMaterial color="#ffdbac" />
-      </Sphere>
-      <Sphere position={[0.9, 0.4, 0]} args={[0.12]}>
+      </mesh>
+      <mesh position={[0.9, 0.4, 0]}>
+        <sphereGeometry args={[0.12, 16, 16]} />
         <meshPhongMaterial color="#ffdbac" />
-      </Sphere>
+      </mesh>
       
       {/* Legs */}
-      <Cylinder ref={leftLegRef} position={[-0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]}>
+      <mesh ref={leftLegRef} position={[-0.2, -0.4, 0]}>
+        <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshPhongMaterial color="#45b7d1" />
-      </Cylinder>
-      <Cylinder ref={rightLegRef} position={[0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]}>
+      </mesh>
+      <mesh ref={rightLegRef} position={[0.2, -0.4, 0]}>
+        <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshPhongMaterial color="#45b7d1" />
-      </Cylinder>
+      </mesh>
       
       {/* Feet */}
-      <Box position={[-0.2, -0.9, 0.1]} args={[0.2, 0.1, 0.3]}>
+      <mesh position={[-0.2, -0.9, 0.1]}>
+        <boxGeometry args={[0.2, 0.1, 0.3]} />
         <meshPhongMaterial color="#2c3e50" />
-      </Box>
-      <Box position={[0.2, -0.9, 0.1]} args={[0.2, 0.1, 0.3]}>
+      </mesh>
+      <mesh position={[0.2, -0.9, 0.1]}>
+        <boxGeometry args={[0.2, 0.1, 0.3]} />
         <meshPhongMaterial color="#2c3e50" />
-      </Box>
+      </mesh>
     </group>
   );
 };
