@@ -7,9 +7,21 @@ interface GameSceneProps {
   animation: string;
   characterScale: number;
   characterPosition: [number, number, number];
+  leftArmRotation?: number;
+  rightArmRotation?: number;
+  leftLegRotation?: number;
+  rightLegRotation?: number;
 }
 
-const GameScene = ({ animation, characterScale, characterPosition }: GameSceneProps) => {
+const GameScene = ({ 
+  animation, 
+  characterScale, 
+  characterPosition,
+  leftArmRotation,
+  rightArmRotation,
+  leftLegRotation,
+  rightLegRotation
+}: GameSceneProps) => {
   return (
     <div className="w-full h-full">
       <Canvas
@@ -29,7 +41,6 @@ const GameScene = ({ animation, characterScale, characterPosition }: GameScenePr
         />
         <pointLight position={[-5, 5, 5]} intensity={0.5} />
         
-        {/* Ground */}
         <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[10, 10]} />
           <meshPhongMaterial color="#90EE90" />
@@ -41,6 +52,10 @@ const GameScene = ({ animation, characterScale, characterPosition }: GameScenePr
             animation={animation} 
             scale={characterScale} 
             position={characterPosition}
+            leftArmRotation={leftArmRotation}
+            rightArmRotation={rightArmRotation}
+            leftLegRotation={leftLegRotation}
+            rightLegRotation={rightLegRotation}
           />
         </Suspense>
       </Canvas>

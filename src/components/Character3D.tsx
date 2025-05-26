@@ -7,9 +7,21 @@ interface Character3DProps {
   animation: string;
   scale: number;
   position: [number, number, number];
+  leftArmRotation?: number;
+  rightArmRotation?: number;
+  leftLegRotation?: number;
+  rightLegRotation?: number;
 }
 
-const Character3D = ({ animation, scale, position }: Character3DProps) => {
+const Character3D = ({ 
+  animation, 
+  scale, 
+  position,
+  leftArmRotation = 0,
+  rightArmRotation = 0,
+  leftLegRotation = 0,
+  rightLegRotation = 0
+}: Character3DProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Mesh>(null);
   const bodyRef = useRef<THREE.Mesh>(null);
@@ -25,6 +37,20 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
     setTime(newTime);
     
     if (!groupRef.current) return;
+
+    // Apply manual rotations to body parts
+    if (leftArmRef.current) {
+      leftArmRef.current.rotation.z = 0.3 + leftArmRotation;
+    }
+    if (rightArmRef.current) {
+      rightArmRef.current.rotation.z = -0.3 + rightArmRotation;
+    }
+    if (leftLegRef.current) {
+      leftLegRef.current.rotation.x = leftLegRotation;
+    }
+    if (rightLegRef.current) {
+      rightLegRef.current.rotation.x = rightLegRotation;
+    }
 
     // Base animations
     switch (animation) {
@@ -42,8 +68,8 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         // Jumping animation
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5;
-          rightArmRef.current.rotation.z = -Math.sin(newTime * 8) * 0.5 - 0.5;
+          leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5 + leftArmRotation;
+          rightArmRef.current.rotation.z = -Math.sin(newTime * 8) * 0.5 - 0.5 + rightArmRotation;
         }
         break;
         
@@ -51,12 +77,12 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         // Dancing animation
         groupRef.current.rotation.y = Math.sin(newTime * 4) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = Math.sin(newTime * 6) * 0.8;
-          rightArmRef.current.rotation.z = -Math.sin(newTime * 6) * 0.8;
+          leftArmRef.current.rotation.z = Math.sin(newTime * 6) * 0.8 + leftArmRotation;
+          rightArmRef.current.rotation.z = -Math.sin(newTime * 6) * 0.8 + rightArmRotation;
         }
         if (leftLegRef.current && rightLegRef.current) {
-          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.3;
-          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.3;
+          leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.3 + leftLegRotation;
+          rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.3 + rightLegRotation;
         }
         break;
         
@@ -66,8 +92,8 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
           headRef.current.scale.setScalar(1 + Math.sin(newTime * 10) * 0.1);
         }
         if (leftArmRef.current && rightArmRef.current) {
-          leftArmRef.current.rotation.z = 1.2;
-          rightArmRef.current.rotation.z = -1.2;
+          leftArmRef.current.rotation.z = 1.2 + leftArmRotation;
+          rightArmRef.current.rotation.z = -1.2 + rightArmRotation;
         }
         break;
     }
@@ -81,7 +107,6 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         <meshPhongMaterial color="#ffdbac" />
       </mesh>
       
-      {/* Eyes */}
       <mesh position={[-0.15, 1.6, 0.35]} castShadow>
         <sphereGeometry args={[0.08, 16, 16]} />
         <meshPhongMaterial color="white" />
@@ -99,19 +124,16 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         <meshPhongMaterial color="black" />
       </mesh>
       
-      {/* Nose */}
       <mesh position={[0, 1.5, 0.35]} castShadow>
         <sphereGeometry args={[0.03, 16, 16]} />
         <meshPhongMaterial color="#ffbf80" />
       </mesh>
       
-      {/* Mouth */}
       <mesh position={[0, 1.35, 0.35]} castShadow>
         <sphereGeometry args={[0.1, 16, 16]} />
         <meshPhongMaterial color="#ff6b6b" />
       </mesh>
       
-      {/* Hair */}
       <mesh position={[0, 1.8, 0]} castShadow>
         <sphereGeometry args={[0.45, 32, 32]} />
         <meshPhongMaterial color="#8b4513" />
@@ -123,7 +145,7 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         <meshPhongMaterial color="#4ecdc4" />
       </mesh>
       
-      {/* Arms */}
+      {/* Arms with controllable rotation */}
       <mesh ref={leftArmRef} position={[-0.6, 0.7, 0]} rotation={[0, 0, 0.3]} castShadow>
         <cylinderGeometry args={[0.1, 0.1, 0.8, 16]} />
         <meshPhongMaterial color="#ffdbac" />
@@ -143,7 +165,7 @@ const Character3D = ({ animation, scale, position }: Character3DProps) => {
         <meshPhongMaterial color="#ffdbac" />
       </mesh>
       
-      {/* Legs */}
+      {/* Legs with controllable rotation */}
       <mesh ref={leftLegRef} position={[-0.2, -0.4, 0]} castShadow>
         <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
         <meshPhongMaterial color="#45b7d1" />

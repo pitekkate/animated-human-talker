@@ -2,17 +2,24 @@ import { useState, useCallback, useEffect } from 'react';
 import GameScene from '@/components/GameScene';
 import GameControls from '@/components/GameControls';
 import MovementControls from '@/components/MovementControls';
+import BodyPartControls from '@/components/BodyPartControls';
 import GameUI from '@/components/GameUI';
 import SettingsDialog from '@/components/SettingsDialog';
 import { toast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const [currentAnimation, setCurrentAnimation] = useState<string>('idle');
-  const [characterScale, setCharacterScale] = useState<number>(0.7); // Made smaller
+  const [characterScale, setCharacterScale] = useState<number>(0.7);
   const [characterPosition, setCharacterPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [vibrationEnabled, setVibrationEnabled] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  
+  // Body part rotations
+  const [leftArmRotation, setLeftArmRotation] = useState<number>(0);
+  const [rightArmRotation, setRightArmRotation] = useState<number>(0);
+  const [leftLegRotation, setLeftLegRotation] = useState<number>(0);
+  const [rightLegRotation, setRightLegRotation] = useState<number>(0);
 
   // Auto-reset animation to idle after some time
   useEffect(() => {
@@ -85,6 +92,40 @@ const Index = () => {
       navigator.vibrate(pattern);
     }
   }, [vibrationEnabled]);
+
+  // Body part control functions
+  const handleMoveLeftArm = useCallback(() => {
+    setLeftArmRotation(prev => prev + 0.5);
+    playSound('touch');
+  }, [playSound]);
+
+  const handleMoveRightArm = useCallback(() => {
+    setRightArmRotation(prev => prev - 0.5);
+    playSound('touch');
+  }, [playSound]);
+
+  const handleMoveLeftLeg = useCallback(() => {
+    setLeftLegRotation(prev => prev + 0.3);
+    playSound('touch');
+  }, [playSound]);
+
+  const handleMoveRightLeg = useCallback(() => {
+    setRightLegRotation(prev => prev - 0.3);
+    playSound('touch');
+  }, [playSound]);
+
+  const handleResetPose = useCallback(() => {
+    setLeftArmRotation(0);
+    setRightArmRotation(0);
+    setLeftLegRotation(0);
+    setRightLegRotation(0);
+    playSound('touch');
+    toast({
+      title: "Pose Reset! 🔄",
+      description: "Character returned to default pose",
+      duration: 2000,
+    });
+  }, [playSound]);
 
   const handleTouchHead = useCallback(() => {
     setCurrentAnimation('happy');
@@ -164,6 +205,10 @@ const Index = () => {
         animation={currentAnimation} 
         characterScale={characterScale} 
         characterPosition={characterPosition}
+        leftArmRotation={leftArmRotation}
+        rightArmRotation={rightArmRotation}
+        leftLegRotation={leftLegRotation}
+        rightLegRotation={rightLegRotation}
       />
       
       {/* UI Overlay */}
@@ -179,6 +224,15 @@ const Index = () => {
         onMoveDown={() => moveCharacter('down')}
         onMoveLeft={() => moveCharacter('left')}
         onMoveRight={() => moveCharacter('right')}
+      />
+      
+      {/* Body Part Controls */}
+      <BodyPartControls
+        onMoveLeftArm={handleMoveLeftArm}
+        onMoveRightArm={handleMoveRightArm}
+        onMoveLeftLeg={handleMoveLeftLeg}
+        onMoveRightLeg={handleMoveRightLeg}
+        onResetPose={handleResetPose}
       />
       
       {/* Game Controls */}
