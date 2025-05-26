@@ -1,7 +1,7 @@
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Sphere, Box, Cylinder } from '@react-three/drei';
+import { Sphere, Box, Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface Character3DProps {
@@ -76,73 +76,73 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
     <group ref={groupRef} scale={scale}>
       {/* Head */}
       <Sphere ref={headRef} position={[0, 1.5, 0]} args={[0.4]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffdbac" }]} />
+        <meshPhongMaterial color="#ffdbac" />
       </Sphere>
       
       {/* Eyes */}
       <Sphere position={[-0.15, 1.6, 0.35]} args={[0.08]} castShadow>
-        <meshPhongMaterial args={[{ color: "white" }]} />
+        <meshPhongMaterial color="white" />
       </Sphere>
       <Sphere position={[0.15, 1.6, 0.35]} args={[0.08]} castShadow>
-        <meshPhongMaterial args={[{ color: "white" }]} />
+        <meshPhongMaterial color="white" />
       </Sphere>
       <Sphere position={[-0.15, 1.6, 0.4]} args={[0.04]} castShadow>
-        <meshPhongMaterial args={[{ color: "black" }]} />
+        <meshPhongMaterial color="black" />
       </Sphere>
       <Sphere position={[0.15, 1.6, 0.4]} args={[0.04]} castShadow>
-        <meshPhongMaterial args={[{ color: "black" }]} />
+        <meshPhongMaterial color="black" />
       </Sphere>
       
       {/* Nose */}
       <Sphere position={[0, 1.5, 0.35]} args={[0.03]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffbf80" }]} />
+        <meshPhongMaterial color="#ffbf80" />
       </Sphere>
       
       {/* Mouth */}
       <Sphere position={[0, 1.35, 0.35]} args={[0.1, 0.05]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ff6b6b" }]} />
+        <meshPhongMaterial color="#ff6b6b" />
       </Sphere>
       
       {/* Hair */}
       <Sphere position={[0, 1.8, 0]} args={[0.45, 0.3]} castShadow>
-        <meshPhongMaterial args={[{ color: "#8b4513" }]} />
+        <meshPhongMaterial color="#8b4513" />
       </Sphere>
       
       {/* Body */}
       <Cylinder ref={bodyRef} position={[0, 0.5, 0]} args={[0.3, 0.4, 1]} castShadow>
-        <meshPhongMaterial args={[{ color: "#4ecdc4" }]} />
+        <meshPhongMaterial color="#4ecdc4" />
       </Cylinder>
       
       {/* Arms */}
       <Cylinder ref={leftArmRef} position={[-0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, 0.3]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffdbac" }]} />
+        <meshPhongMaterial color="#ffdbac" />
       </Cylinder>
       <Cylinder ref={rightArmRef} position={[0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, -0.3]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffdbac" }]} />
+        <meshPhongMaterial color="#ffdbac" />
       </Cylinder>
       
       {/* Hands */}
       <Sphere position={[-0.9, 0.4, 0]} args={[0.12]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffdbac" }]} />
+        <meshPhongMaterial color="#ffdbac" />
       </Sphere>
       <Sphere position={[0.9, 0.4, 0]} args={[0.12]} castShadow>
-        <meshPhongMaterial args={[{ color: "#ffdbac" }]} />
+        <meshPhongMaterial color="#ffdbac" />
       </Sphere>
       
       {/* Legs */}
       <Cylinder ref={leftLegRef} position={[-0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]} castShadow>
-        <meshPhongMaterial args={[{ color: "#45b7d1" }]} />
+        <meshPhongMaterial color="#45b7d1" />
       </Cylinder>
       <Cylinder ref={rightLegRef} position={[0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]} castShadow>
-        <meshPhongMaterial args={[{ color: "#45b7d1" }]} />
+        <meshPhongMaterial color="#45b7d1" />
       </Cylinder>
       
       {/* Feet */}
       <Box position={[-0.2, -0.9, 0.1]} args={[0.2, 0.1, 0.3]} castShadow>
-        <meshPhongMaterial args={[{ color: "#2c3e50" }]} />
+        <meshPhongMaterial color="#2c3e50" />
       </Box>
       <Box position={[0.2, -0.9, 0.1]} args={[0.2, 0.1, 0.3]} castShadow>
-        <meshPhongMaterial args={[{ color: "#2c3e50" }]} />
+        <meshPhongMaterial color="#2c3e50" />
       </Box>
     </group>
   );
