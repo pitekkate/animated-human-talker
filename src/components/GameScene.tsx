@@ -33,13 +33,13 @@ const GameScene = ({ animation, characterScale }: GameSceneProps) => {
           {/* Ground */}
           <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <planeGeometry args={[10, 10]} />
-            <meshPhongMaterial args={[{ color: "#90EE90" }]} />
+            <meshPhongMaterial color="#90EE90" />
           </mesh>
           
           {/* Character */}
           <Character3D animation={animation} scale={characterScale} />
           
-          {/* Controls - disabled for mobile touch */}
+          {/* Controls - properly within Canvas */}
           <OrbitControls
             enableZoom={false}
             enablePan={false}
