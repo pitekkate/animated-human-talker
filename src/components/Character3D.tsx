@@ -75,65 +75,65 @@ const Character3D = ({ animation, scale }: Character3DProps) => {
   return (
     <group ref={groupRef} scale={scale}>
       {/* Head */}
-      <Sphere ref={headRef} position={[0, 1.5, 0]} args={[0.4]} castShadow>
+      <Sphere ref={headRef} position={[0, 1.5, 0]} args={[0.4, 32, 32]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
       </Sphere>
       
       {/* Eyes */}
-      <Sphere position={[-0.15, 1.6, 0.35]} args={[0.08]} castShadow>
+      <Sphere position={[-0.15, 1.6, 0.35]} args={[0.08, 16, 16]} castShadow>
         <meshPhongMaterial color="white" />
       </Sphere>
-      <Sphere position={[0.15, 1.6, 0.35]} args={[0.08]} castShadow>
+      <Sphere position={[0.15, 1.6, 0.35]} args={[0.08, 16, 16]} castShadow>
         <meshPhongMaterial color="white" />
       </Sphere>
-      <Sphere position={[-0.15, 1.6, 0.4]} args={[0.04]} castShadow>
+      <Sphere position={[-0.15, 1.6, 0.4]} args={[0.04, 16, 16]} castShadow>
         <meshPhongMaterial color="black" />
       </Sphere>
-      <Sphere position={[0.15, 1.6, 0.4]} args={[0.04]} castShadow>
+      <Sphere position={[0.15, 1.6, 0.4]} args={[0.04, 16, 16]} castShadow>
         <meshPhongMaterial color="black" />
       </Sphere>
       
       {/* Nose */}
-      <Sphere position={[0, 1.5, 0.35]} args={[0.03]} castShadow>
+      <Sphere position={[0, 1.5, 0.35]} args={[0.03, 16, 16]} castShadow>
         <meshPhongMaterial color="#ffbf80" />
       </Sphere>
       
-      {/* Mouth */}
-      <Sphere position={[0, 1.35, 0.35]} args={[0.1, 0.05]} castShadow>
+      {/* Mouth - using a flattened sphere */}
+      <Sphere position={[0, 1.35, 0.35]} args={[0.1, 16, 8]} castShadow>
         <meshPhongMaterial color="#ff6b6b" />
       </Sphere>
       
-      {/* Hair */}
-      <Sphere position={[0, 1.8, 0]} args={[0.45, 0.3]} castShadow>
+      {/* Hair - using a flattened sphere */}
+      <Sphere position={[0, 1.8, 0]} args={[0.45, 32, 16]} castShadow>
         <meshPhongMaterial color="#8b4513" />
       </Sphere>
       
       {/* Body */}
-      <Cylinder ref={bodyRef} position={[0, 0.5, 0]} args={[0.3, 0.4, 1]} castShadow>
+      <Cylinder ref={bodyRef} position={[0, 0.5, 0]} args={[0.3, 0.4, 1, 32]} castShadow>
         <meshPhongMaterial color="#4ecdc4" />
       </Cylinder>
       
       {/* Arms */}
-      <Cylinder ref={leftArmRef} position={[-0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, 0.3]} castShadow>
+      <Cylinder ref={leftArmRef} position={[-0.6, 0.7, 0]} args={[0.1, 0.1, 0.8, 16]} rotation={[0, 0, 0.3]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
       </Cylinder>
-      <Cylinder ref={rightArmRef} position={[0.6, 0.7, 0]} args={[0.1, 0.1, 0.8]} rotation={[0, 0, -0.3]} castShadow>
+      <Cylinder ref={rightArmRef} position={[0.6, 0.7, 0]} args={[0.1, 0.1, 0.8, 16]} rotation={[0, 0, -0.3]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
       </Cylinder>
       
       {/* Hands */}
-      <Sphere position={[-0.9, 0.4, 0]} args={[0.12]} castShadow>
+      <Sphere position={[-0.9, 0.4, 0]} args={[0.12, 16, 16]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
       </Sphere>
-      <Sphere position={[0.9, 0.4, 0]} args={[0.12]} castShadow>
+      <Sphere position={[0.9, 0.4, 0]} args={[0.12, 16, 16]} castShadow>
         <meshPhongMaterial color="#ffdbac" />
       </Sphere>
       
       {/* Legs */}
-      <Cylinder ref={leftLegRef} position={[-0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]} castShadow>
+      <Cylinder ref={leftLegRef} position={[-0.2, -0.4, 0]} args={[0.12, 0.12, 0.8, 16]} castShadow>
         <meshPhongMaterial color="#45b7d1" />
       </Cylinder>
-      <Cylinder ref={rightLegRef} position={[0.2, -0.4, 0]} args={[0.12, 0.12, 0.8]} castShadow>
+      <Cylinder ref={rightLegRef} position={[0.2, -0.4, 0]} args={[0.12, 0.12, 0.8, 16]} castShadow>
         <meshPhongMaterial color="#45b7d1" />
       </Cylinder>
       
