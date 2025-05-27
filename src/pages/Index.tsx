@@ -4,17 +4,21 @@ import GameControls from '@/components/GameControls';
 import MovementControls from '@/components/MovementControls';
 import GameUI from '@/components/GameUI';
 import SettingsDialog from '@/components/SettingsDialog';
+import CharacterCustomizationPanel from '@/components/CharacterCustomization';
 import { useGameState } from '@/hooks/useGameState';
 import { useAudio } from '@/hooks/useAudio';
 import { useVibration } from '@/hooks/useVibration';
 import { useCharacterMovement } from '@/hooks/useCharacterMovement';
 import { useCharacterAnimation } from '@/hooks/useCharacterAnimation';
 import { useGameActions } from '@/hooks/useGameActions';
+import { useCharacterCustomization } from '@/hooks/useCharacterCustomization';
 
 const Index = () => {
   const gameState = useGameState();
   const { playSound } = useAudio(gameState.isMuted);
   const { triggerVibration } = useVibration(gameState.vibrationEnabled);
+  
+  const customization = useCharacterCustomization();
   
   const { moveCharacter } = useCharacterMovement({
     selectedCharacter: gameState.selectedCharacter,
@@ -56,6 +60,8 @@ const Index = () => {
         characterScale={gameState.characterScale} 
         malePosition={gameState.malePosition}
         femalePosition={gameState.femalePosition}
+        maleCustomization={customization.maleCustomization}
+        femaleCustomization={customization.femaleCustomization}
       />
       
       {/* UI Overlay */}
@@ -63,6 +69,15 @@ const Index = () => {
         isMuted={gameState.isMuted}
         onToggleMute={gameActions.handleToggleMute}
         onShowSettings={() => gameState.setShowSettings(true)}
+      />
+      
+      {/* Character Customization Panel */}
+      <CharacterCustomizationPanel
+        selectedCharacter={gameState.selectedCharacter}
+        maleCustomization={customization.maleCustomization}
+        femaleCustomization={customization.femaleCustomization}
+        onUpdateMale={customization.updateMaleCustomization}
+        onUpdateFemale={customization.updateFemaleCustomization}
       />
       
       {/* Movement Controls */}

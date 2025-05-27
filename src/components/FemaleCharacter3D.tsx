@@ -2,17 +2,20 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { CharacterCustomization } from '@/hooks/useCharacterCustomization';
 
 interface FemaleCharacter3DProps {
   animation: string;
   scale: number;
   position: [number, number, number];
+  customization: CharacterCustomization;
 }
 
 const FemaleCharacter3D = ({ 
   animation, 
   scale, 
-  position
+  position,
+  customization
 }: FemaleCharacter3DProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Mesh>(null);
@@ -34,7 +37,6 @@ const FemaleCharacter3D = ({
     // Base animations
     switch (animation) {
       case 'idle':
-        // Gentle breathing animation
         if (bodyRef.current) {
           bodyRef.current.scale.y = 1 + Math.sin(newTime * 2) * 0.05;
         }
@@ -44,7 +46,6 @@ const FemaleCharacter3D = ({
         if (hairRef.current) {
           hairRef.current.rotation.y = Math.sin(newTime * 0.8) * 0.05;
         }
-        // Reset arm and leg positions
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.z = 0.3;
           rightArmRef.current.rotation.z = -0.3;
@@ -58,7 +59,6 @@ const FemaleCharacter3D = ({
         break;
 
       case 'walking':
-        // Walking animation
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.x = Math.sin(newTime * 6) * 0.4;
           rightArmRef.current.rotation.x = -Math.sin(newTime * 6) * 0.4;
@@ -69,18 +69,15 @@ const FemaleCharacter3D = ({
           leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.6;
           rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.6;
         }
-        // Body sway
         if (bodyRef.current) {
           bodyRef.current.rotation.z = Math.sin(newTime * 6) * 0.08;
         }
-        // Hair movement
         if (hairRef.current) {
           hairRef.current.rotation.y = Math.sin(newTime * 4) * 0.1;
         }
         break;
         
       case 'happy':
-        // Jumping animation
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5;
@@ -94,7 +91,6 @@ const FemaleCharacter3D = ({
         break;
         
       case 'dancing':
-        // Enhanced dancing animation
         groupRef.current.rotation.y = Math.sin(newTime * 4) * 0.3;
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.2;
         
@@ -110,20 +106,17 @@ const FemaleCharacter3D = ({
           rightLegRef.current.rotation.x = -Math.sin(newTime * 8) * 0.3;
         }
         
-        // Hair dancing
         if (hairRef.current) {
           hairRef.current.rotation.y = Math.sin(newTime * 5) * 0.2;
           hairRef.current.rotation.z = Math.sin(newTime * 3) * 0.1;
         }
         
-        // Body dancing
         if (bodyRef.current) {
           bodyRef.current.rotation.z = Math.sin(newTime * 4) * 0.15;
         }
         break;
         
       case 'surprised':
-        // Startled animation
         if (headRef.current) {
           headRef.current.scale.setScalar(1 + Math.sin(newTime * 10) * 0.1);
         }
@@ -181,19 +174,27 @@ const FemaleCharacter3D = ({
       {/* Long Hair */}
       <mesh ref={hairRef} position={[0, 1.6, -0.1]} castShadow>
         <sphereGeometry args={[0.4, 32, 32]} />
-        <meshPhongMaterial color="#4a2c2a" />
+        <meshPhongMaterial color={customization.hairColor} />
       </mesh>
       
       {/* Hair bangs */}
       <mesh position={[0, 1.75, 0.1]} castShadow>
         <sphereGeometry args={[0.3, 16, 16]} />
-        <meshPhongMaterial color="#4a2c2a" />
+        <meshPhongMaterial color={customization.hairColor} />
       </mesh>
+      
+      {/* Hat (if enabled) */}
+      {customization.hasHat && (
+        <mesh position={[0, 2.0, 0]} castShadow>
+          <cylinderGeometry args={[0.3, 0.35, 0.15, 32]} />
+          <meshPhongMaterial color={customization.hatColor} />
+        </mesh>
+      )}
       
       {/* Body (dress-like shape) */}
       <mesh ref={bodyRef} position={[0, 0.5, 0]} castShadow>
         <cylinderGeometry args={[0.35, 0.45, 1, 32]} />
-        <meshPhongMaterial color="#ff69b4" />
+        <meshPhongMaterial color={customization.clothingColor} />
       </mesh>
       
       {/* Arms */}

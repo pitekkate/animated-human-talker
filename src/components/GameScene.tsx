@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
 import Character3D from './Character3D';
 import FemaleCharacter3D from './FemaleCharacter3D';
+import { CharacterCustomization } from '@/hooks/useCharacterCustomization';
 
 interface GameSceneProps {
   maleAnimation: string;
@@ -10,6 +11,8 @@ interface GameSceneProps {
   characterScale: number;
   malePosition: [number, number, number];
   femalePosition: [number, number, number];
+  maleCustomization: CharacterCustomization;
+  femaleCustomization: CharacterCustomization;
 }
 
 const GameScene = ({ 
@@ -17,7 +20,9 @@ const GameScene = ({
   femaleAnimation,
   characterScale, 
   malePosition,
-  femalePosition
+  femalePosition,
+  maleCustomization,
+  femaleCustomization
 }: GameSceneProps) => {
   return (
     <div className="w-full h-full">
@@ -49,6 +54,7 @@ const GameScene = ({
             animation={maleAnimation} 
             scale={characterScale} 
             position={malePosition}
+            customization={maleCustomization}
           />
         </Suspense>
         
@@ -58,6 +64,7 @@ const GameScene = ({
             animation={femaleAnimation} 
             scale={characterScale} 
             position={femalePosition}
+            customization={femaleCustomization}
           />
         </Suspense>
       </Canvas>

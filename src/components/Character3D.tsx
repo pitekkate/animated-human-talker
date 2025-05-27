@@ -2,17 +2,20 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { CharacterCustomization } from '@/hooks/useCharacterCustomization';
 
 interface Character3DProps {
   animation: string;
   scale: number;
   position: [number, number, number];
+  customization: CharacterCustomization;
 }
 
 const Character3D = ({ 
   animation, 
   scale, 
-  position
+  position,
+  customization
 }: Character3DProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Mesh>(null);
@@ -33,14 +36,12 @@ const Character3D = ({
     // Base animations
     switch (animation) {
       case 'idle':
-        // Gentle breathing animation
         if (bodyRef.current) {
           bodyRef.current.scale.y = 1 + Math.sin(newTime * 2) * 0.05;
         }
         if (headRef.current) {
           headRef.current.rotation.y = Math.sin(newTime * 0.5) * 0.1;
         }
-        // Reset arm and leg positions
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.z = 0.3;
           rightArmRef.current.rotation.z = -0.3;
@@ -54,7 +55,6 @@ const Character3D = ({
         break;
 
       case 'walking':
-        // Walking animation
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.x = Math.sin(newTime * 6) * 0.5;
           rightArmRef.current.rotation.x = -Math.sin(newTime * 6) * 0.5;
@@ -65,18 +65,15 @@ const Character3D = ({
           leftLegRef.current.rotation.x = Math.sin(newTime * 6) * 0.8;
           rightLegRef.current.rotation.x = -Math.sin(newTime * 6) * 0.8;
         }
-        // Body sway
         if (bodyRef.current) {
           bodyRef.current.rotation.z = Math.sin(newTime * 6) * 0.1;
         }
-        // Head movement
         if (headRef.current) {
           headRef.current.rotation.y = Math.sin(newTime * 3) * 0.15;
         }
         break;
         
       case 'happy':
-        // Jumping animation
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.3;
         if (leftArmRef.current && rightArmRef.current) {
           leftArmRef.current.rotation.z = Math.sin(newTime * 8) * 0.5 + 0.5;
@@ -87,7 +84,6 @@ const Character3D = ({
         break;
         
       case 'dancing':
-        // Enhanced dancing animation
         groupRef.current.rotation.y = Math.sin(newTime * 4) * 0.3;
         groupRef.current.position.y = position[1] + Math.abs(Math.sin(newTime * 8)) * 0.2;
         
@@ -103,20 +99,17 @@ const Character3D = ({
           rightLegRef.current.rotation.x = -Math.sin(newTime * 8) * 0.3;
         }
         
-        // Head dancing
         if (headRef.current) {
           headRef.current.rotation.y = Math.sin(newTime * 5) * 0.2;
           headRef.current.rotation.z = Math.sin(newTime * 3) * 0.1;
         }
         
-        // Body dancing
         if (bodyRef.current) {
           bodyRef.current.rotation.z = Math.sin(newTime * 4) * 0.15;
         }
         break;
         
       case 'surprised':
-        // Startled animation
         if (headRef.current) {
           headRef.current.scale.setScalar(1 + Math.sin(newTime * 10) * 0.1);
         }
@@ -171,13 +164,21 @@ const Character3D = ({
       {/* Hair */}
       <mesh position={[0, 1.8, 0]} castShadow>
         <sphereGeometry args={[0.45, 32, 32]} />
-        <meshPhongMaterial color="#8b4513" />
+        <meshPhongMaterial color={customization.hairColor} />
       </mesh>
+      
+      {/* Hat (if enabled) */}
+      {customization.hasHat && (
+        <mesh position={[0, 2.1, 0]} castShadow>
+          <cylinderGeometry args={[0.35, 0.4, 0.2, 32]} />
+          <meshPhongMaterial color={customization.hatColor} />
+        </mesh>
+      )}
       
       {/* Body */}
       <mesh ref={bodyRef} position={[0, 0.5, 0]} castShadow>
         <cylinderGeometry args={[0.3, 0.4, 1, 32]} />
-        <meshPhongMaterial color="#4ecdc4" />
+        <meshPhongMaterial color={customization.clothingColor} />
       </mesh>
       
       {/* Arms */}
