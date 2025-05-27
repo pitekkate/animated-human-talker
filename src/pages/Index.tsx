@@ -4,7 +4,6 @@ import GameControls from '@/components/GameControls';
 import MovementControls from '@/components/MovementControls';
 import GameUI from '@/components/GameUI';
 import SettingsDialog from '@/components/SettingsDialog';
-import CharacterCustomizationPanel from '@/components/CharacterCustomization';
 import { useGameState } from '@/hooks/useGameState';
 import { useAudio } from '@/hooks/useAudio';
 import { useVibration } from '@/hooks/useVibration';
@@ -71,15 +70,6 @@ const Index = () => {
         onShowSettings={() => gameState.setShowSettings(true)}
       />
       
-      {/* Character Customization Panel */}
-      <CharacterCustomizationPanel
-        selectedCharacter={gameState.selectedCharacter}
-        maleCustomization={customization.maleCustomization}
-        femaleCustomization={customization.femaleCustomization}
-        onUpdateMale={customization.updateMaleCustomization}
-        onUpdateFemale={customization.updateFemaleCustomization}
-      />
-      
       {/* Movement Controls */}
       <MovementControls
         onMoveUp={() => moveCharacter('up')}
@@ -116,6 +106,11 @@ const Index = () => {
         onToggleMute={gameActions.handleToggleMute}
         vibrationEnabled={gameState.vibrationEnabled}
         onToggleVibration={gameActions.handleToggleVibration}
+        selectedCharacter={gameState.selectedCharacter}
+        maleCustomization={customization.maleCustomization}
+        femaleCustomization={customization.femaleCustomization}
+        onUpdateMale={customization.updateMaleCustomization}
+        onUpdateFemale={customization.updateFemaleCustomization}
       />
     </div>
   );
